@@ -11,6 +11,9 @@
 
         .anime-poster {max-width: 60%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); display: none; margin: 0 auto 20px auto;}
 
+        .progress-bar-bg {background: #3a3a42; border-radius: 20px; width: 100%; height: 15px; margin-top: 15px; overflow: hidden;}
+        #progress-bar-fill {background: #04d361; width: 0%; height: 100%; border-radius: 20px; transition: width 0.8s ease-in-out;}
+
     </style>
 </head>
 <body>
@@ -24,6 +27,11 @@
         <h2 id="ep-title">Ładowanie danych...</h2>
         <p id="ep-desc">Czekam na sygnał z aplikacji...</p>
         <h2>Postęp: <span id="progress">-</span></h2>
+
+        <div class="progress-bar-bg">
+            <div id=""progress-bar-fill"></div>
+        </div>
+
     </div>
 
     <script>
@@ -82,6 +90,9 @@
                         // document.getElementById('progress').innerText = postep + "%";
                         const postep = Math.floor((data.id / last_episode)*100);
                         document.getElementById('progress').innerText = postep + "%";
+
+                        document.getElementById('progress-bar-fill').style.width = postep + "%";
+
                     } else {
                         document.getElementById('ep-title').innerText = "Błąd API One Piece (Odcinek może istnieje)";
                     }
