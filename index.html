@@ -25,6 +25,24 @@
         // Twój spersonalizowany link do bazy danych
         const FIREBASE_URL = "https://one-piece-tracker-571fd-default-rtdb.europe-west1.firebasedatabase.app/odcinek.json";
 
+    async function loadPoster() {
+                try {
+                    // ID One Piece w bazie MyAnimeList/Jikan to 21
+                    const res = await fetch('https://api.jikan.moe/v4/anime/21');
+                    if (res.ok) {
+                        const result = await res.json();
+                        const imgUrl = result.data.images.jpg.large_image_url;
+                        
+                        const imgElement = document.getElementById('anime-img');
+                        imgElement.src = imgUrl;
+                        imgElement.style.display = "block"; // Pokazujemy obrazek
+                        posterLoaded = true;
+                    }
+                } catch (err) {
+                    console.error("Nie udało się pobrać plakatu:", err);
+                }
+            }
+
         async function checkDatabase() {
             try {
                 const resDb = await fetch(FIREBASE_URL);
@@ -33,6 +51,10 @@
                 if (!numerOdcinka) {
                     document.getElementById('ep-title').innerText = "Baza jest pusta. Wpisz numer w programie!";
                     return;
+                }
+
+                if (!posterLoaded) {
+                    await loadPoster();
                 }
 
                 if (numerOdcinka !== lastEpisode) {
