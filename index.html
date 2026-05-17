@@ -8,12 +8,18 @@
         .card { background: #202024; padding: 30px; border-radius: 10px; max-width: 500px; margin: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         h1 { color: #ff9000; }
         p { color: #a8a8b3; line-height: 1.6; }
+
+        .anime-poster {max-width: 60%; heigh: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); display: none; margin: 0 auto 20px auto;}
+
     </style>
 </head>
 <body>
 
     <div class="card">
         <p>Status: <span id="status" style="color: #04d361;">Połączono (Live)</span></p>
+
+        <img id="anime-img" class="anime-poster" src="https://cdn.myanimelist.net/images/anime/1244/138851.jpg" alt="Plakat One Piece" style="display: block;">
+
         <h1>Odcinek: <span id="ep-number">-</span></h1>
         <h2 id="ep-title">Ładowanie danych...</h2>
         <p id="ep-desc">Czekam na sygnał z aplikacji...</p>
@@ -21,6 +27,7 @@
 
     <script>
         let lastEpisode = null;
+        let posterLoaded = false;
 
         // Twój spersonalizowany link do bazy danych
         const FIREBASE_URL = "https://one-piece-tracker-571fd-default-rtdb.europe-west1.firebasedatabase.app/odcinek.json";
@@ -68,7 +75,7 @@
                         document.getElementById('ep-title').innerText = data.title;
                         document.getElementById('ep-desc').innerText = data.description || "Brak opisu dla tego odcinka.";
                     } else {
-                        document.getElementById('ep-title').innerText = "Błąd API One Piece (Odcinek może nie istnieć)";
+                        document.getElementById('ep-title').innerText = "Błąd API One Piece (Odcinek może istnieje)";
                     }
                 }
             } catch (error) {
