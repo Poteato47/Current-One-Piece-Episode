@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>One Piece Live Tracker</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121214; color: #e1e1e6; text-align: center; padding: 50px; }
+        .card { background: #202024; padding: 30px; border-radius: 10px; max-width: 500px; margin: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        h1 { color: #ff9000; }
+        p { color: #a8a8b3; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <p>Status: <span id="status" style="color: #04d361;">Połączono (Live)</span></p>
+        <h1>Odcinek: <span id="ep-number">-</span></h1>
+        <h2 id="ep-title">Ładowanie danych...</h2>
+        <p id="ep-desc">Czekam na sygnał z aplikacji...</p>
+    </div>
+
+    <script>
+        let lastEpisode = null;
+
+        // Twój spersonalizowany link do bazy danych
+        const FIREBASE_URL = "https://one-piece-tracker-571fd-default-rtdb.europe-west1.firebasedatabase.app/odcinek.json";
+
+        async function checkDatabase() {
+            try {
+                const resDb = await fetch(FIREBASE_URL);
+                const numerOdcinka = await resDb.json();
+
+                if (!numerOdcinka) {
+                    document.getElementById('ep-title').innerText = "Baza jest pusta. Wpisz numer w programie!";
+                    return;
+                }
+
+                if (numerOdcinka !== lastEpisode) {
+                    lastEpisode = numerOdcinka;
+                    
+                    // Pobieranie danych z oficjalnego API One Piece
+                    const resApi = await fetch(`https://api.api-onepiece.com/v2/episodes/en/${numerOdcinka}`);
+                    if (resApi.ok) {
+                        const data = await resApi.json();
+                        document.getElementById('ep-number').innerText = data.id;
+                        document.getElementById('ep-title').innerText = data.title;
+                        document.getElementById('ep-desc').innerText = data.description || "Brak opisu dla tego odcinka.";
+                    } else {
+                        document.getElementById('ep-title').innerText = "Błąd API One Piece (Odcinek może nie istnieć)";
+                    }
+                }
+            } catch (error) {
+                document.getElementById('status').innerText = "Błąd połączenia";
+                document.getElementById('status').style.color = "#ff0000";
+                console.error(error);
+            }
+        }
+
+        // Sprawdzanie bazy co 5 sekund bez przeładowywania strony
+        setInterval(checkDatabase, 5000);
+        checkDatabase();
+    </script>
+</body>
+</html>
