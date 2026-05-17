@@ -3,6 +3,8 @@ import requests
 # !!! TUTAJ WKLEJ TEN SAM LINK CO W KODZIE HTML !!!
 FIREBASE_URL = "https://one-piece-tracker-571fd-default-rtdb.europe-west1.firebasedatabase.app/odcinek.json"
 
+# JIKAN_API_URL = "https://api.jikan.moe/v4/anime/21/episodes?limit=1"
+
 print("====================================")
 print("    ONE PIECE TRACKER - UPDATER     ")
 print("====================================")

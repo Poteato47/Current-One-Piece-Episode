@@ -23,14 +23,19 @@
         <h1>Odcinek: <span id="ep-number">-</span></h1>
         <h2 id="ep-title">Ładowanie danych...</h2>
         <p id="ep-desc">Czekam na sygnał z aplikacji...</p>
+        <h2>Postęp: <span id="progress">-</span></h2>
     </div>
 
     <script>
         let lastEpisode = null;
         let posterLoaded = false;
 
+        // const JIKAN_API_URL = "https://api.jikan.moe/v4/anime/21/episodes?limit=1"
+
         // Twój spersonalizowany link do bazy danych
         const FIREBASE_URL = "https://one-piece-tracker-571fd-default-rtdb.europe-west1.firebasedatabase.app/odcinek.json";
+
+        const last_episode = 1140;
 
     async function loadPoster() {
                 try {
@@ -66,7 +71,6 @@
 
                 if (numerOdcinka !== lastEpisode) {
                     lastEpisode = numerOdcinka;
-                    
                     // Pobieranie danych z oficjalnego API One Piece
                     const resApi = await fetch(`https://api.api-onepiece.com/v2/episodes/en/${numerOdcinka}`);
                     if (resApi.ok) {
@@ -74,6 +78,10 @@
                         document.getElementById('ep-number').innerText = data.id;
                         document.getElementById('ep-title').innerText = data.title;
                         document.getElementById('ep-desc').innerText = data.description || "Brak opisu dla tego odcinka.";
+                        // const postep = Math.floor((data.id / data["pagination"]["last_visible_page"])*100);
+                        // document.getElementById('progress').innerText = postep + "%";
+                        const postep = Math.floor((data.id / last_episode)*100);
+                        document.getElementById('progress').innerText = postep + "%";
                     } else {
                         document.getElementById('ep-title').innerText = "Błąd API One Piece (Odcinek może istnieje)";
                     }
